@@ -32,16 +32,16 @@ class Paddle:
 
 
 def paddle_movement(keys, left_paddle, right_paddle):
-    if keys[pygame.K_w]:
+    if keys[pygame.K_w] and left_paddle.y-left_paddle.mov_ment >= 0:
         left_paddle.move(up=True)
 
-    elif keys[pygame.K_s]:
+    elif keys[pygame.K_s] and left_paddle.y+left_paddle.mov_ment+left_paddle.height <= Height:
         left_paddle.move(up=False)
 
-    elif keys[pygame.K_UP]:
+    elif keys[pygame.K_UP] and right_paddle.y-right_paddle.mov_ment >= 0:
         right_paddle.move(up=True)
 
-    elif keys[pygame.K_DOWN]:
+    elif keys[pygame.K_DOWN] and right_paddle.y+right_paddle.mov_ment+right_paddle.height <= Height:
         right_paddle.move(up=False)
 
 
