@@ -11,6 +11,7 @@ paddle_width, paddle_heigth = 20, 100
 class Paddle:
 
     colour = ((255, 255, 255))  # rgb of white
+    mov_ment = 4
 
     def __init__(self, x, y, width, height):
 
@@ -22,6 +23,26 @@ class Paddle:
     def draw(self, window):
         pygame.draw.rect(window, self.colour,
                          (self.x, self.y, self.width, self.height))
+
+    def move(self, up=True):
+        if up == True:
+            self.y -= self.mov_ment
+        else:
+            self.y += self.mov_ment
+
+
+def paddle_movement(keys, left_paddle, right_paddle):
+    if keys[pygame.K_w]:
+        left_paddle.move(up=True)
+
+    elif keys[pygame.K_s]:
+        left_paddle.move(up=False)
+
+    elif keys[pygame.K_UP]:
+        right_paddle.move(up=True)
+
+    elif keys[pygame.K_DOWN]:
+        right_paddle.move(up=False)
 
 
 def draw(window, paddles):
@@ -49,6 +70,9 @@ def display():
             if action.type == pygame.QUIT:
                 run = False
                 exit()
+
+        keys = pygame.key.get_pressed()
+        paddle_movement(keys, left_paddle, right_paddle)
 
     pygame.quit()
 
