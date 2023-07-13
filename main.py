@@ -32,6 +32,20 @@ class Paddle:
             self.y += self.mov_ment
 
 
+def paddle_movement(keys, left_paddle, right_paddle):
+    if keys[pygame.K_w] and left_paddle.y-left_paddle.mov_ment >= 0:
+        left_paddle.move(up=True)
+
+    elif keys[pygame.K_s] and left_paddle.y+left_paddle.mov_ment+left_paddle.height <= Height:
+        left_paddle.move(up=False)
+
+    elif keys[pygame.K_UP] and right_paddle.y-right_paddle.mov_ment >= 0:
+        right_paddle.move(up=True)
+
+    elif keys[pygame.K_DOWN] and right_paddle.y+right_paddle.mov_ment+right_paddle.height <= Height:
+        right_paddle.move(up=False)
+
+
 class ball:
     # Initial velocity of the ball when game starts
     def velocity(self):
@@ -60,18 +74,30 @@ class ball:
         self.y += self.y_vel
 
 
-def paddle_movement(keys, left_paddle, right_paddle):
-    if keys[pygame.K_w] and left_paddle.y-left_paddle.mov_ment >= 0:
-        left_paddle.move(up=True)
+def ball_collison(pong_ball, left_paddle, right_paddle):
+    # Handling collision with floor
+    if pong_ball.y+pong_ball.r >= Height:
+        pong_ball.y_vel = -pong_ball.y_vel
 
-    elif keys[pygame.K_s] and left_paddle.y+left_paddle.mov_ment+left_paddle.height <= Height:
-        left_paddle.move(up=False)
+    # Handling collison with bottom of the below
+    elif pong_ball.y-pong_ball.r <= 0:
+        pong_ball.y_vel = -pong_ball.y_vel
 
-    elif keys[pygame.K_UP] and right_paddle.y-right_paddle.mov_ment >= 0:
-        right_paddle.move(up=True)
+    # Hitting the left paddle
+    if pong_ball.x_vel < 0:
+        # Checking if ball is in b/w the top and bottom edges of paddle
+        # left_paddle topedge of left paddle(=0) and left_paddle.y+ left_paddle.height is bottom edge
+        if pong_ball.y >= left_paddle.y and pong_ball.y <= left_paddle.y + left_paddle.height:
+            # Checking if ball is in contact with paddle
+            if pong_ball.x - pong_ball.r <= left_paddle.x + left_paddle.width:
+                pong_ball.x_vel = -pong_ball.x_vel
 
-    elif keys[pygame.K_DOWN] and right_paddle.y+right_paddle.mov_ment+right_paddle.height <= Height:
-        right_paddle.move(up=False)
+    # Right paddle velocity will +ve
+    else:
+        if pong_ball.y >= right_paddle.y and pong_ball.y <= right_paddle.y + right_paddle.height:
+            # We will straight away get the coordinate so no neet to add width
+            if pong_ball.x + pong_ball.r >= right_paddle.x:
+                pong_ball.x_vel = -pong_ball.x_vel
 
 
 def draw(window, paddles, ball):
@@ -113,6 +139,7 @@ def display():
         keys = pygame.key.get_pressed()
         paddle_movement(keys, left_paddle, right_paddle)
         pong_ball.move()
+        ball_collison(pong_ball, left_paddle, right_paddle)
     pygame.quit()
 
 
