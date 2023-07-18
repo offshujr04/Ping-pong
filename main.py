@@ -75,6 +75,7 @@ class ball:
 
 
 def ball_collison(pong_ball, left_paddle, right_paddle):
+    max_vel = 8
     # Handling collision with floor
     if pong_ball.y+pong_ball.r >= Height:
         pong_ball.y_vel = -pong_ball.y_vel
@@ -92,12 +93,44 @@ def ball_collison(pong_ball, left_paddle, right_paddle):
             if pong_ball.x - pong_ball.r <= left_paddle.x + left_paddle.width:
                 pong_ball.x_vel = -pong_ball.x_vel
 
+                # Colission conditions for y velocity
+                # Wrong
+                # Getting the centre of left paddle
+                leftmiddle_y = left_paddle.y + left_paddle.height/2
+
+                # Distance b/w middle of y and ball
+                displacement = leftmiddle_y - pong_ball.y
+
+                # Reduction factor to control the speed
+                reduction_speed = (left_paddle.height / 2)/max_vel
+
+                # Changing velocity along y axis
+                y_vel = displacement/reduction_speed
+
+                pong_ball.y_vel = -1 * y_vel
+
     # Right paddle velocity will +ve
+
     else:
         if pong_ball.y >= right_paddle.y and pong_ball.y <= right_paddle.y + right_paddle.height:
             # We will straight away get the coordinate so no neet to add width
             if pong_ball.x + pong_ball.r >= right_paddle.x:
                 pong_ball.x_vel = -pong_ball.x_vel
+
+                # Colission conditions for y velocity
+                # Getting the centre of left paddle
+                rightmiddle_y = right_paddle.y + right_paddle.height/2
+
+                # Distance b/w middle of y and ball
+                displacement = rightmiddle_y - pong_ball.y
+
+                # Reduction factor to control the speed
+                reduction_speed = (right_paddle.height / 2)/max_vel
+
+                # Changing velocity along y axis
+                y_vel = displacement/reduction_speed
+
+                pong_ball.y_vel = -1 * y_vel
 
 
 def draw(window, paddles, ball):
@@ -105,7 +138,7 @@ def draw(window, paddles, ball):
 
     for p in paddles:
         p.draw(window)
-# Creating a middle line
+    # Creating a middle line
 
     for i in range(10, Height, Height//20):
         if i % 2 == 1:
@@ -114,7 +147,7 @@ def draw(window, paddles, ball):
                          ((Width//2)-5, i, 10, Height//20))
 
     ball.draw(window)
-    pygame.display.update()
+    pygame.display.update()  # req for every game
 
 
 def display():
