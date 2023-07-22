@@ -17,8 +17,8 @@ class Paddle:
 
     def __init__(self, x, y, width, height):
 
-        self.x = x
-        self.y = y
+        self.x = self.og_pad_x = x
+        self.y = self.og_pad_y = y
         self.width = width
         self.height = height
 
@@ -31,6 +31,10 @@ class Paddle:
             self.y -= self.mov_ment
         else:
             self.y += self.mov_ment
+
+    def reset_paddle(self):
+        self.x = self.og_pad_x
+        self.y = self.og_pad_y
 
 
 def paddle_movement(keys, left_paddle, right_paddle):
@@ -217,10 +221,14 @@ def display():
         if pong_ball.x < 0:
             right_score += 1
             pong_ball.reset()
+            left_paddle.reset_paddle()
+            right_paddle.reset_paddle()
 
         elif pong_ball.x > Width:
             left_score += 1
             pong_ball.reset()
+            left_paddle.reset_paddle()
+            right_paddle.reset_paddle()
 
         pygame.display.flip()
     pygame.quit()
