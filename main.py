@@ -58,8 +58,8 @@ class ball:
             return 5  # First ball will move to the right side
 
     def __init__(self, x, y, r):  # r-Radius
-        self.x = x
-        self.y = y
+        self.x = self.og_x = x
+        self.y = self.og_y = y
         self.r = r
 
         # Deciding velocity of the ball
@@ -73,6 +73,13 @@ class ball:
     def move(self):
         self.x += self.x_vel
         self.y += self.y_vel
+
+    def reset(self):
+        self.x = self.og_x
+        self.y = self.og_y
+
+        self.x_vel = -(self.velocity())
+        self.y_vel = 0
 
 
 def ball_collison(pong_ball, left_paddle, right_paddle):
@@ -209,9 +216,11 @@ def display():
 
         if pong_ball.x < 0:
             right_score += 1
+            pong_ball.reset()
 
         elif pong_ball.x > Width:
             left_score += 1
+            pong_ball.reset()
 
         pygame.display.flip()
     pygame.quit()
