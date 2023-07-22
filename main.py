@@ -196,6 +196,7 @@ def display():
         clock.tick(Fps)
         draw(Window, [left_paddle, right_paddle],
              pong_ball, left_score, right_score)
+
         for action in pygame.event.get():
             if action.type == pygame.QUIT:
                 run = False
@@ -207,11 +208,12 @@ def display():
         ball_collison(pong_ball, left_paddle, right_paddle)
 
         if pong_ball.x < 0:
-            left_score += left_score
+            right_score += 1
 
         elif pong_ball.x > Width:
-            right_score += right_score
-    pygame.display.flip()
+            left_score += 1
+
+        pygame.display.flip()
     pygame.quit()
 
 
