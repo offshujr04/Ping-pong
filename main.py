@@ -7,6 +7,7 @@ Window = pygame.display.set_mode((Width, Height))  # Size of window
 pygame.display.set_caption("Ping Pong")  # Title of window
 Fps = 60
 paddle_width, paddle_heigth = 20, 100
+txt_font = pygame.font.SysFont("Arial", 50)
 
 
 class Paddle:
@@ -77,10 +78,11 @@ class ball:
 def ball_collison(pong_ball, left_paddle, right_paddle):
     max_vel = 8
     # Handling collision with floor
+    # ball.y ----- centre of the ball
     if pong_ball.y+pong_ball.r >= Height:
         pong_ball.y_vel = -pong_ball.y_vel
 
-    # Handling collison with bottom of the below
+    # Handling collison with roof
     elif pong_ball.y-pong_ball.r <= 0:
         pong_ball.y_vel = -pong_ball.y_vel
 
@@ -108,6 +110,10 @@ def ball_collison(pong_ball, left_paddle, right_paddle):
                 y_vel = displacement/reduction_speed
 
                 pong_ball.y_vel = -1 * y_vel
+        # Pong ball velocity will be zero if it goes out of any of the screens
+        elif pong_ball.x < 0:
+            pong_ball.y_vel = 0
+            pong_ball.x_vel = 0
 
     # Right paddle velocity will +ve
 
@@ -132,14 +138,26 @@ def ball_collison(pong_ball, left_paddle, right_paddle):
 
                 pong_ball.y_vel = -1 * y_vel
 
+        # Pong ball velocity will be zero if it goes out of any of the screen
+        elif pong_ball.x > Width:
+            pong_ball.y_vel = 0
+            pong_ball.x_vel = 0
 
-def draw(window, paddles, ball):
+
+def draw(window, paddles, ball, left_score, right_score):
     window.fill((0, 0, 0))  # Passing the rgb value of colour black
+
+    left_score_text = txt_font.render(f"{left_score}", True, (255, 255, 255))
+    right_score_text = txt_font.render(f"{right_score}", True, (255, 255, 255))
+    Window.blit(left_score_text, (Width//4 -
+                left_score_text.get_width()//2, 20))
+    Window.blit(right_score_text, (Width*(3/4) -
+                right_score_text.get_width()//2, 20))
 
     for p in paddles:
         p.draw(window)
-    # Creating a middle line
 
+    # Creating a middle line
     for i in range(10, Height, Height//20):
         if i % 2 == 1:
             continue
@@ -149,9 +167,17 @@ def draw(window, paddles, ball):
     ball.draw(window)
     pygame.display.update()  # req for every game
 
+# # First we will get the text and convert it into an image
+
+
+# def draw_txt(text, font, col, x, y):
+#     img = font.render(text, True, col)
+#     Window.blit(img, (x, y))
+
 
 def display():
     run = True
+
     clock = pygame.time.Clock()  # Regulates the frame rate of our game
 
     left_paddle = Paddle(10, Height//2-paddle_heigth //
@@ -161,9 +187,15 @@ def display():
 
     pong_ball = ball(Width//2, Height//2, 7)
 
+    left_score = 0
+    right_score = 0
+
+    # draw_txt("PLayer 1", txt_font, (255, 255, 255), 220, 150)
+
     while run:
         clock.tick(Fps)
-        draw(Window, [left_paddle, right_paddle], pong_ball)
+        draw(Window, [left_paddle, right_paddle],
+             pong_ball, left_score, right_score)
         for action in pygame.event.get():
             if action.type == pygame.QUIT:
                 run = False
@@ -173,6 +205,13 @@ def display():
         paddle_movement(keys, left_paddle, right_paddle)
         pong_ball.move()
         ball_collison(pong_ball, left_paddle, right_paddle)
+
+        if pong_ball.x < 0:
+            left_score += left_score
+
+        elif pong_ball.x > Width:
+            right_score += right_score
+    pygame.display.flip()
     pygame.quit()
 
 
