@@ -182,11 +182,6 @@ def draw(window, paddles, ball, left_score, right_score):
 # # First we will get the text and convert it into an image
 
 
-# def draw_txt(text, font, col, x, y):
-#     img = font.render(text, True, col)
-#     Window.blit(img, (x, y))
-
-
 def display():
     run = True
 
@@ -201,8 +196,6 @@ def display():
 
     left_score = 0
     right_score = 0
-
-    # draw_txt("PLayer 1", txt_font, (255, 255, 255), 220, 150)
 
     while run:
         clock.tick(Fps)
@@ -224,17 +217,15 @@ def display():
             pong_ball.reset()
             left_paddle.reset_paddle()
             right_paddle.reset_paddle()
-            # pygame.time.delay(1000)
+            pygame.time.delay(1500)
 
         elif pong_ball.x > Width:
             left_score += 1
             pong_ball.reset()
             left_paddle.reset_paddle()
             right_paddle.reset_paddle()
-            # pygame.time.delay(1000)
+            pygame.time.delay(1500)
 
-        # Code left from video
-        # Use time.delay from pygane to slow the restart by 1 or 2 sec
         won_cond = False
 
         if left_score == win_score:
