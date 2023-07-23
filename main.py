@@ -8,7 +8,7 @@ pygame.display.set_caption("Ping Pong")  # Title of window
 Fps = 60
 paddle_width, paddle_heigth = 20, 100
 txt_font = pygame.font.SysFont("Arial", 50)
-win_score = 15
+win_score = 2
 
 
 class Paddle:
@@ -247,22 +247,30 @@ def display():
         if won_cond:
 
             if left_score == win_score:
+                pong_ball.reset()
+                left_paddle.reset_paddle()
+                right_paddle.reset_paddle()
                 win_l_txt = txt_font.render(
                     "Left Wins!!!", True, (255, 255, 255))
                 Window.blit(
-                    win_l_txt, (Width//2 - win_l_txt.get_width()//2, Height//2))
+                    win_l_txt, (Width//2 - win_l_txt.get_width()//2, Height//2 - win_l_txt.get_height()//2))
+                pygame.display.update()
+                pygame.time.delay(1000)
+                left_score = 0
+                right_score = 0
+
+            elif right_score == win_score:
                 pong_ball.reset()
                 left_paddle.reset_paddle()
                 right_paddle.reset_paddle()
-
-            elif right_score == win_score:
                 win_r_txt = txt_font.render(
                     "Right Wins!!!", True, (255, 255, 255))
                 Window.blit(
-                    win_r_txt, (Width//2 - win_l_txt.get_width()//2, Height//2))
-                pong_ball.reset()
-                left_paddle.reset_paddle()
-                right_paddle.reset_paddle()
+                    win_r_txt, (Width//2 - win_r_txt.get_width()//2, Height//2 - win_r_txt.get_height()//2))
+                pygame.display.update()
+                pygame.time.delay(1000)
+                left_score = 0
+                right_score = 0
 
         pygame.display.flip()
     pygame.quit()
